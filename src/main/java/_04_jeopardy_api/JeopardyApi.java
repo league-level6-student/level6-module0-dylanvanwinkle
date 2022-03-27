@@ -32,7 +32,18 @@ public class JeopardyApi {
     public Clue getClue(int value) {
 
         //1  Use the WebClient code from the previous exercises to make the request:
-        //Note:
+    	Mono<Clue[]> stringMono = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .queryParam("q", "pizza")
+                        .queryParam("value", value)
+                        .build())
+                .retrieve()
+                .bodyToMono(Clue[].class);
+
+        Clue[] response = stringMono.block();
+
+        System.out.println(response);
+    	//Note:
         //The base URL has already been provided, but we we need to take the "value" parameter passed into
         //this method and supply it as a query parameter with the name of "value".  This allows us to retrieve a question
         //with the specified point value.
@@ -41,10 +52,11 @@ public class JeopardyApi {
 
         //2
         //Get a random number less than the size of the Clue array
-
+Random r = new Random();
+int ran = r.nextInt(response.length - 1);
         //3
         //return the clue at the random index you just created
 
-        return null;
+        return response[ran];
     }
 }
